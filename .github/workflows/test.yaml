@@ -3,7 +3,7 @@ name: Test CI Workflow
 on:
   push:
     branches:
-      - main
+      - Backend
 
 jobs:
   test-and-build:
@@ -15,14 +15,17 @@ jobs:
       - name: Install dependencies
         run: |
           echo "Install dependencies ..."
+          cd backend/
           npm install
 
       - name: Run tests
         run: |
           echo "Run tests ..."
+          cd backend/
           npm test
           
       - name: Build application
         run: |
           echo "Build application ..."
+          cd backend/
           npm run build
