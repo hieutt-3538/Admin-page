@@ -8,6 +8,11 @@ on:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]    
+    env:
+      NODE_VER: 18
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -15,23 +20,44 @@ jobs:
       - name: Use Node  
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: $NODE_VER
 
       - name: Install dependencies
         run: |
-          echo "Install dependencies ..."
+          echo "Install dependencies ..." 
           node -v
           cd backend/
           npm install
 
       - name: Run tests
+        env: 
+          LOCAL_VAR: "Hello Step run test"
         run: |
-          echo "Run tests ..."
-          cd backend/
-          npm test
-          
+          echo "Run Local Var $LOCAL_VAR "
+
       - name: Build application
         run: |
           echo "Build application ..."
           cd backend/
           npm run build
+
+      - name: Set Environment Variable
+        run: |
+          echo "MY_DYNAMIC_VAR=123" >> $GITHUB_ENV 
+
+      - name: Use Environment Variable
+        run: |
+          echo "The value is: $MY_DYNAMIC_VAR"                 
+
+      - name: Use Secret
+        run: |
+          echo "My secret is ${{ secrets.API_KEY }}"
+          echo "::debug::$API_KEY"
+
+      - name: Use Repository Variable
+        run: |
+          echo "Repo Variable: ${{ vars.MY_VARIABLE }}"
+
+      - name: Print Node Version
+        run: |
+          echo "Testing on Node.js version ${{ matrix.node-version }}"          
