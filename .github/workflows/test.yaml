@@ -10,31 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            backend
 
-      - name: Check Secret Presence and Length
-        env:
-          MY_API_KEY: ${{ secrets.API_KEY }}
+      - name: Dependencies install
         run: |
-          if [ -z "$MY_API_KEY" ]; then
-            echo "Secret is empty or not set!"
-            exit 1
-          else
-            echo "Secret is set."
-            echo "Secret length: ${#MY_API_KEY}" # In ra độ dài của secret
-          fi
-
-      - name: Show Partial Secret (Use with Caution!)
-        run: |
-          # Lấy giá trị secret vào biến môi trường tạm thời
-          SECRET_VALUE="${{ secrets.API_KEY }}"
-          # Chỉ hiển thị 4 ký tự đầu (ví dụ)
-          echo "Secret starts with: ${SECRET_VALUE:0:10}***"
-          # Hoặc hiển thị 4 ký tự cuối (ví dụ)
-          echo "Secret ends with: ***${SECRET_VALUE: -4}"
-
-      - name: Print GitHub Variables
-        run: |
-          echo "Repo Name: ${{ github.repository }}"
-          echo "Branch Name: ${{ github.ref }}"
-          echo "Workflow Name: ${{ github.workflow }}"
+          echo "Dependencies install process"
+          npm install
+          echo "Dependencies install success"
