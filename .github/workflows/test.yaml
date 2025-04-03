@@ -15,7 +15,11 @@ jobs:
           sparse-checkout: |
             backend
 
+      - name: List files after sparse checkout
+        run: ls -laR
+
       - name: Dependencies install
+        working-directory: ./backend
         run: |
           echo "Dependencies install process"
           npm install
