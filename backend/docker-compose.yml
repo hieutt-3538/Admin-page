@@ -1,0 +1,71 @@
+# version: "3.8"
+
+# services:
+#   mysql:
+#     image: mysql:8
+#     restart: always
+#     environment:
+#       MYSQL_ROOT_PASSWORD: root
+#       MYSQL_DATABASE: node_auth
+#       MYSQL_USER: user
+#       MYSQL_PASSWORD: password
+#     ports:
+#       - "3306:3306"
+#     volumes:
+#       - mysql_data:/var/lib/mysql
+
+#   backend:
+#     build: .
+#     ports:
+#       - "5000:5000"
+#     depends_on:
+#       - mysql
+#     environment:
+#       DB_HOST: mysql
+#       DB_USER: user
+#       DB_PASSWORD: password
+#       DB_NAME: node_auth
+#       JWT_SECRET: "supersecret"
+#     volumes:
+#       - .:/app
+#     command: ["npm", "run", "dev"]
+
+# volumes:
+#   mysql_data:
+
+
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: node_auth
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Thêm dòng này để chạy init.sql
+
+  backend:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_NAME: node_auth
+      JWT_SECRET: "supersecret"
+    volumes:
+      - .:/app
+    command: ["npm", "run", "dev"]
+
+volumes:
+  mysql_data:
