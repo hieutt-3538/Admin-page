@@ -8,56 +8,21 @@ on:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14, 16, 18]    
-    env:
-      NODE_VER: 18
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Use Node  
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install dependencies
-        run: |
-          echo "Install dependencies ..." 
-          node -v
-          cd backend/
-          npm install
-
-      - name: Run tests
-        env: 
-          LOCAL_VAR: "Hello Step run test"
-        run: |
-          echo "Run Local Var $LOCAL_VAR "
-
-      - name: Set Environment Variable
-        run: |
-          echo "MY_DYNAMIC_VAR=123" >> $GITHUB_ENV 
-
-      - name: Use Environment Variable
-        run: |
-          echo "The value is: $MY_DYNAMIC_VAR"                 
-
-      - name: Use Secret
-        run: |
-          echo "My secret is ${{ secrets.API_KEY }}"
           
-      - name: Show Secret
+      - name: Check Secret Presence and Length
         env:
-          API_KEY_SHOW: ${{ secrets.API_KEY }}
+          MY_API_KEY: ${{ secrets.API_KEY }}
         run: |
-          echo "Using API_KEY"
-          echo "::debug::$API_KEY_SHOW"          
+          if [ -z "$MY_API_KEY" ]; then
+            echo "Secret is empty or not set!"
+            exit 1
+          else
+            echo "Secret is set."
+            echo "Secret length: ${#MY_API_KEY}" # In ra độ dài của secret
+          fi       
 
-      - name: Use Repository Variable
-        run: |
-          echo "Repo Variable: ${{ vars.MY_VARIABLE }}"
 
-      - name: Print Node Version
-        run: |
-          echo "Testing on Node.js version ${{ matrix.node-version }}"          
+      
