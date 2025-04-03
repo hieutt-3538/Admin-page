@@ -31,7 +31,7 @@ jobs:
           # Chỉ hiển thị 4 ký tự đầu (ví dụ)
           echo "Secret starts with: ${SECRET_VALUE:0:4}***"
           # Hoặc hiển thị 4 ký tự cuối (ví dụ)
-          # echo "Secret ends with: ***${SECRET_VALUE: -4}"
+          echo "Secret ends with: ***${SECRET_VALUE: -4}"
 
       - name: Print GitHub Variables
         run: |
