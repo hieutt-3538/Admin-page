@@ -1,0 +1,38 @@
+# .github/actions/my-local-action/action.yml
+
+# Tên của Action cục bộ
+name: 'My Simple Local Action'
+
+# Mô tả chức năng
+description: 'In ra lời chào và một số thông tin hệ thống'
+
+# Định nghĩa các tham số đầu vào (inputs) mà action này chấp nhận
+inputs:
+  # Tên của input là 'input-greeting'
+  input-greeting:
+    description: 'Lời chào đầu vào sẽ được in ra'
+    required: true        # Input này là bắt buộc
+    default: 'Hello'      # Giá trị mặc định nếu không được cung cấp
+
+# Định nghĩa cách action này chạy
+runs:
+  # Sử dụng 'composite' để kết hợp nhiều bước shell
+  using: "composite"
+  # Các bước sẽ được thực thi khi action này được gọi
+  steps:
+    # Bước 1: In ra lời chào được truyền vào qua input
+    - name: Print Greeting
+      # Sử dụng cú pháp ${{ inputs.TEN_INPUT }} để truy cập giá trị input
+      run: |
+        echo "Thông điệp từ workflow: ${{ inputs.input-greeting }}"
+      shell: bash # Chỉ định shell để chạy lệnh
+
+    # Bước 2: In ra thư mục làm việc hiện tại
+    - name: Print Directory
+      run: pwd
+      shell: bash
+
+    # Bước 3: Liệt kê file trong thư mục làm việc
+    - name: List Files
+      run: ls -l
+      shell: bash
