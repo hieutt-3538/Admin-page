@@ -15,6 +15,7 @@ jobs:
       - name: Install dependencies
         run: |
           echo "Install dependencies ..."
+          node -v
           cd backend/
           npm install
 
