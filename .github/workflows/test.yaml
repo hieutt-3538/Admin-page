@@ -20,7 +20,7 @@ jobs:
       - name: Use Node  
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VER }}
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: |
@@ -46,7 +46,13 @@ jobs:
       - name: Use Secret
         run: |
           echo "My secret is ${{ secrets.API_KEY }}"
-          echo "::debug::$API_KEY"
+          
+      - name: Show Secret
+        env:
+          API_KEY_SHOW: ${{ secrets.API_KEY }}
+        run: |
+          echo "Using API_KEY"
+          echo "::debug::$API_KEY_SHOW"          
 
       - name: Use Repository Variable
         run: |
