@@ -35,12 +35,6 @@ jobs:
         run: |
           echo "Run Local Var $LOCAL_VAR "
 
-      - name: Build application
-        run: |
-          echo "Build application ..."
-          cd backend/
-          npm run build
-
       - name: Set Environment Variable
         run: |
           echo "MY_DYNAMIC_VAR=123" >> $GITHUB_ENV 
