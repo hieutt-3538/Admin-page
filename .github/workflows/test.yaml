@@ -21,7 +21,7 @@ jobs:
       # Bước 3: Sử dụng Action Cục bộ (Local Action) <--- PHẦN QUAN TRỌNG
       - name: Run my local action
       # 'uses:' trỏ đến đường dẫn tương đối của thư mục chứa action.yml cục bộ
-        uses: ./.github/actions
+        uses: ./.github/actions/
         # 'with:' dùng để truyền giá trị cho các 'inputs:' đã định nghĩa trong action.yml cục bộ
         with:
           input-greeting: "Xin chào từ Workflow gọi Local Action!" # Giá trị này sẽ được gán cho inputs.input-greeting        
