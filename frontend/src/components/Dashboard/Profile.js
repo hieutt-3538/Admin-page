@@ -14,7 +14,7 @@ const Profile = () => {
         alert("You need login!");
         navigate("/login");
       });
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="profile-container">
