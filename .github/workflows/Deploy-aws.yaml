@@ -41,7 +41,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.AWS_OIDC }}
-          aws-region: eu-east-1 # Thay Region
+          aws-region: us-east-1 # Thay Region
 
       - name: Deploy to S3 Bucket
         run: aws s3 sync .frontend/build s3://hieutt-testbucket --delete # Sync từ thư mục đã download artifact
