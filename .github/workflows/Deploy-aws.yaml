@@ -44,7 +44,7 @@ jobs:
           aws-region: us-east-1 # Thay Region
 
       - name: Deploy to S3 Bucket
-        run: aws s3 sync .frontend/build s3://hieutt-testbucket --delete # Sync từ thư mục đã download artifact
+        run: aws s3 sync ./frontend/build s3://hieutt-testbucket --delete # Sync từ thư mục đã download artifact
 
       - name: Deployment Successful
         run: echo "✅ Static site deployed successfully!"        
