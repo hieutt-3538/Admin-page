@@ -15,6 +15,10 @@ jobs:
   build:
     name: Build Static Site
     runs-on: ubuntu-latest
+    permissions: # Có thể đặt ở đây hoặc ở cấp workflow
+      id-token: write
+      contents: read
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -33,33 +37,6 @@ jobs:
         working-directory: ./frontend
         run: npm run build # Giả sử lệnh này tạo ra thư mục 'build'
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: static-site-files
-          path: ./build # Đường dẫn đến thư mục chứa kết quả build
-
-  deploy:
-    name: Deploy to S3
-    runs-on: ubuntu-latest
-    needs: build # Chạy sau khi build thành công
-
-    # (Tùy chọn) Liên kết với GitHub Environment
-    # environment:
-    #   name: production
-    #   url: https://your-website-url.com
-
-    permissions: # Có thể đặt ở đây hoặc ở cấp workflow
-      id-token: write
-      contents: read
-
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: static-site-files
-          path: ./deploy-files # Tải artifact vào thư mục này
-
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -67,13 +44,8 @@ jobs:
           aws-region: eu-east-1 # Thay Region
 
       - name: Deploy to S3 Bucket
-        run: aws s3 sync ./deploy-files s3://hieutt-testbucket --delete # Sync từ thư mục đã download artifact
-        # Đảm bảo Role có quyền s3:PutObject, s3:DeleteObject, s3:ListBucket trên bucket này
-
-      - name: Invalidate CloudFront Cache (Optional)
-        if: success()
-        run: aws cloudfront create-invalidation --distribution-id YOUR_CF_DIST_ID --paths "/*"
-        # Đảm bảo Role có quyền cloudfront:CreateInvalidation
+        run: aws s3 sync .frontend/build s3://hieutt-testbucket --delete # Sync từ thư mục đã download artifact
 
       - name: Deployment Successful
-        run: echo "✅ Static site deployed successfully!"
+        run: echo "✅ Static site deployed successfully!"        
+
