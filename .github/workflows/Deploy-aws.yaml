@@ -26,6 +26,11 @@ jobs:
       - name: Apply Kubernetes deployment
         run: kubectl apply -f ./kube/nginx-deployment.yaml
 
-      # create step for get pods after deploy
-      - name: Get pods
-        run: kubectl get pods
+      # create step for get pods after deploy, i need sleep 5s to get pods
+      - name: Wait for pods to be ready
+        run: sleep 5
+
+      - name: Get pods and services
+        run: |
+          kubectl get pods
+          kubectl get services
