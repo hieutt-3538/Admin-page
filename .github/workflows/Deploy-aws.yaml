@@ -1,51 +1,27 @@
-# .github/workflows/deploy-s3-oidc.yml
-
-name: Deploy Static Site to S3 via OIDC
+name: Deploy to Kubernetes
 
 on:
   push:
-    branches: [ Frontend ]
-  workflow_dispatch:
-
-permissions:
-  id-token: write
-  contents: read
+    branches:
+      - kube
 
 jobs:
-  build:
-    name: Build Static Site
+  deploy:
     runs-on: ubuntu-latest
-    permissions: # Có thể đặt ở đây hoặc ở cấp workflow
-      id-token: write
-      contents: read
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Minikube
+        uses: medyagh/setup-minikube@master
         with:
-          node-version: '18'
+          minikube-version: 'v1.33.1'
+          driver: docker
 
-      - name: Install Dependencies
+      - name: Deploy to Kubernetes
         working-directory: ./frontend
-        run: |
-          npm install
+        run: kubectl apply -f nginx-deployment.yaml
 
-      - name: Build Static Files
-        working-directory: ./frontend
-        run: npm run build # Giả sử lệnh này tạo ra thư mục 'build'
-
-      - name: Configure AWS Credentials via OIDC
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ vars.AWS_OIDC }}
-          aws-region: us-east-1 # Thay Region
-
-      - name: Deploy to S3 Bucket
-        run: aws s3 sync ./frontend/build s3://hieutt-testbucket --delete # Sync từ thư mục đã download artifact
-
-      - name: Deployment Successful
-        run: echo "✅ Static site deployed successfully!"        
-
+      - name: Verify Deployment
+        run: kubectl get pods
