@@ -21,8 +21,7 @@ jobs:
           minikube status
 
       - name: Deploy to Kubernetes
-        working-directory: ./kube
-        run: kubectl apply -f nginx-deployment.yaml
+        run: kubectl apply -f ./kube/nginx-deployment.yaml
 
       - name: Verify Deployment
         run: kubectl get pods
