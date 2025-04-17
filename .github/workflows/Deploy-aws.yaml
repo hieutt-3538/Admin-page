@@ -25,3 +25,7 @@ jobs:
 
       - name: Apply Kubernetes deployment
         run: kubectl apply -f ./kube/nginx-deployment.yaml
+
+      # create step for get pods after deploy
+      - name: Get pods
+        run: kubectl get pods
