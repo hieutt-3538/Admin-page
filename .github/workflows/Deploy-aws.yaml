@@ -19,11 +19,9 @@ jobs:
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
           minikube start --driver=docker
           minikube status
+          echo "KUBECONFIG=~/.kube/config" >> $GITHUB_ENV
+
+      - name: Deploy to Kubernetes
+        run: |
           kubectl apply -f ./kube/nginx-deployment.yaml
           kubectl get pods
-
-      # - name: Deploy to Kubernetes
-      #   run: kubectl apply -f ./kube/nginx-deployment.yaml
-
-      # - name: Verify Deployment
-      #   run: kubectl get pods
