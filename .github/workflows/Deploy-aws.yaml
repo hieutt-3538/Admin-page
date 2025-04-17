@@ -8,16 +8,20 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Install Minikube
-        run: |
-          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          sudo install minikube-linux-amd64 /usr/local/bin/minikube
-          minikube start --driver=docker
-          minikube status
-          kubectl apply -f ./kube/nginx-deployment.yaml
-          kubectl get pods
+        id: minikube
+        uses: medyagh/setup-minikube@latest
+        with:
+          minikube-version: 'latest'
+          driver: docker
+          container-runtime: containerd
+
+      - name: Start Minikube
+        run: minikube start --driver=docker        
+
+      - name: Apply Kubernetes deployment
+        run: kubectl apply -f ./kube/nginx-deployment.yaml
